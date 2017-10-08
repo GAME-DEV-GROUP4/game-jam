@@ -1,9 +1,17 @@
+
 var rage;
 var door;
 var boss;
 var attackSprites;
+
+function preload(){
+    game.load.image('warningdeadline');
+    game.load.image('deadline');
+}
+
 if(rage >= 100){
     door = true;
+    
 }
 function create(){
     attackSprites = game.add.group();
@@ -17,23 +25,35 @@ function bossAttack(){
   if(rand = 1){
       fx.play('audioqueueA');
       predeadlineHorizontal();
-      predeadlineHorizontal();
+      predeadlineVertical();
       fireball();
   }
   }
 
-
+function deadlinehorizontal(player){
+    var deadlinetime = game.time.now + 3000;
+    var ypos = player.y;
+    var predeadline = attackSprites.create(0, ypos, 'warningdeadlinehort');
+    game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    
+    
+    if (game.time.now > deadlinetime){
+        var deadline = attackSprites.create(0, ypos, 'deadlinehort');
+        game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    }
 }
-function predeadlineHorizontal(){
-    var predeadline = attackSprites.create(playerx, playery, 'warningdeadline');
-    predeadline.scale(screenWidth, height);
-    game.time.events.add(PHASER.TIMER.SECOND*1.5, deadlineHorizontal, this, predeadline, predeadlinex, predeadliney);
-}
 
-function deadlineVertical(predeadline){
-    predeadline.kill();
-    var deadline = attackSprites.create(predeadlineX, predeadlineY, "deadline");
-    game.time.events.add(PHASER.TIMER.SECOND*0.5, deadline.kill(), this);
+function deadlinevertical(player){
+    var deadlinetime = game.time.now + 3000;
+    var xpos = player.x;
+    var predeadline = attackSprites.create(0, xpos, 'warningdeadlinevert');
+    game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    
+    
+    if (game.time.now > deadlinetime){
+        var deadline = attackSprites.create(0, xpos, 'deadlinevert');
+        game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    }
 }
 
 function fireball(fireballSpeed){
