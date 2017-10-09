@@ -103,32 +103,36 @@ demo.bossLevel.prototype=
     }
 };
 
-function deadlinehorizontal(player){
-    var deadlinetime = game.time.now + 3000;
-    var ypos = player.y+24;
+function predeadlinehorizontal(player){
+    var ypos = player.y + 24;
     var predeadline = attackSprites.create(0, ypos, 'warningdeadline');
-    predeadline.width = 2000;
+    predeadline.width = 800;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    game.time.events.add(3000, deadlinehorizontal, this, player, ypos);
+}
     
-    
-    if (game.time.now > deadlinetime){
-        var deadline = attackSprites.create(0, ypos, 'deadline');
-        game.add.tween(deadline).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
-    }
+function deadlinehorizontal(player, ypos){
+    var deadline = attackSprites.create(0, ypos, 'deadline');
+    deadline.width = 800;
+    game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
 }
 
-function deadlinevertical(player){
-    var deadlinetime = game.time.now + 3000;
-    var xpos = player.x+16;
-    var predeadline = attackSprites.create(0, xpos, 'warningdeadlinevert');
+function predeadlinevertical(player){
+    var xpos = player.x + 16;
+    var predeadline = attackSprites.create(xpos, 0, 'warningdeadline');
+    predeadline.width = 600;
+    predeadline.angle = 90;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    
-    
-    if (game.time.now > deadlinetime){
-        var deadline = attackSprites.create(0, xpos, 'deadlinevert');
-        game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    }
+    game.time.events.add(3000, deadlinevertical, this, player, xpos);
 }
+    
+function deadlinevertical(player, xpos){
+    var deadline = attackSprites.create(xpos, 0, 'deadline');
+    deadline.width = 600;
+    deadline.angle = 90;
+    game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+}
+
 function suitAttack(){
     var suit = suits.create(bossman.x, bossman.y, 'star');
     game.physics.enable(suit);
