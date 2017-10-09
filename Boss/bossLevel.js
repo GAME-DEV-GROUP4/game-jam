@@ -23,9 +23,10 @@ demo.bossLevel.prototype=
     game.load.image('warningdeadline', 'assets/deadline-warning.png');
     game.load.image('deadline', 'assets/deadline.png');
     game.load.spritesheet('bossman', 'assets/boss-man-2-68x120.png', 68, 120);
-    game.load.spritesheet('dude', 'assets/dude.png', 28, 48);
+    game.load.spritesheet('dude', 'assets/big-dude.png', 41, 78);
     game.load.image('floor', 'assets/floor.png');
     game.load.image('background', 'assets/bg.png');
+    game.load.image('fireball', 'assets/projectile.png')
     
     },
     
@@ -63,8 +64,8 @@ demo.bossLevel.prototype=
         player.body.gravity.y = 500;
         player.body.collideWorldBounds = true;
         
-        player.animations.add('left', [0, 1, 0, 1], 5, true);
-        player.animations.add('right', [2, 3, 2, 3], 5, true);
+        player.animations.add('left', [0, 1, 2, 3], 10, true);
+        player.animations.add('right', [5, 6, 7, 8], 10, true);
         
         //projectiles
         suits = game.add.group();
@@ -83,7 +84,7 @@ demo.bossLevel.prototype=
         game.physics.arcade.collide(player, floor);
         
         if(this.game.time.totalElapsedSeconds()-hitTime <1){
-            playerx = 75;
+            playerx = 150;
             playery = 175;
         }
         else{
@@ -95,24 +96,24 @@ demo.bossLevel.prototype=
             suitAttack();
         }
         if(testAttackButton2.isDown){
-            deadlinehorizontal(player);
+            predeadlinehorizontal(player);
         }
         if(testAttackButton3.isDown){
-            deadlinevertical(player);
+            predeadlinevertical(player);
         }
     }
 };
 
 function predeadlinehorizontal(player){
     var ypos = player.y + 24;
-    var predeadline = attackSprites.create(0, ypos, 'warningdeadline');
+    var predeadline = attackSprites.create(200, ypos, 'warningdeadline');
     predeadline.width = 800;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    game.time.events.add(3000, deadlinehorizontal, this, player, ypos);
+    game.time.events.add(1000, deadlinehorizontal, this, player, ypos);
 }
     
 function deadlinehorizontal(player, ypos){
-    var deadline = attackSprites.create(0, ypos, 'deadline');
+    var deadline = attackSprites.create(200, ypos, 'deadline');
     deadline.width = 800;
     game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
 }
@@ -123,7 +124,7 @@ function predeadlinevertical(player){
     predeadline.width = 600;
     predeadline.angle = 90;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    game.time.events.add(3000, deadlinevertical, this, player, xpos);
+    game.time.events.add(1000, deadlinevertical, this, player, xpos);
 }
     
 function deadlinevertical(player, xpos){
@@ -134,9 +135,10 @@ function deadlinevertical(player, xpos){
 }
 
 function suitAttack(){
-    var suit = suits.create(bossman.x, bossman.y, 'star');
+    var suit = suits.create(bossman.x, bossman.y, 'fireball');
     game.physics.enable(suit);
     game.physics.arcade.moveToObject(suit, player);
+
 }
 function hitSuit(player, suit)
 {
@@ -167,7 +169,7 @@ function playerMove()
     else 
     {
         player.animations.stop();
-        player.frame = 2;
+        player.frame = 4;
     }
         
         
