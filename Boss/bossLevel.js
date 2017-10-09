@@ -14,6 +14,8 @@ var cursors;
 var testAttackButton;
 var testAttackButton2;
 var testAttackButton3;
+var attackSprites;
+
 
 demo.bossLevel.prototype=
 {
@@ -67,6 +69,8 @@ demo.bossLevel.prototype=
         //projectiles
         suits = game.add.group();
         game.physics.arcade.enable(suits);
+        attackSprites = game.add.group();
+
         
     },
     
@@ -103,13 +107,13 @@ function deadlinehorizontal(player){
     var deadlinetime = game.time.now + 3000;
     var ypos = player.y+24;
     var predeadline = attackSprites.create(0, ypos, 'warningdeadline');
-    predeadline.width = 800;
+    predeadline.width = 2000;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
     
     
     if (game.time.now > deadlinetime){
         var deadline = attackSprites.create(0, ypos, 'deadline');
-        game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+        game.add.tween(deadline).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     }
 }
 
