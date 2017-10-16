@@ -57,6 +57,10 @@ demo.bossLevel.prototype=
         bossman.animations.add('idle', [0, 0, 1, 1], true);
         bossman.animations.play('idle', 8, true);
         
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinehorizontal(player), this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinevertical(player), this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), suitAttack, this);
+        
         //player
         player = game.add.sprite(100, 500, 'dude');
         player.scale.setTo(1.5, 1.5);
