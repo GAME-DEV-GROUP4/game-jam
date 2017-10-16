@@ -12,7 +12,6 @@ var bossx=650;
 var bossy=50;
 var hitTime;
 var cursors;
-var testAttackButton, testAttackButton2, testAttackButton3;
 var attackSprites;
 var hpText;
 var hp = 500;
@@ -39,9 +38,6 @@ demo.bossLevel.prototype=
 
         //controls
         cursors = game.input.keyboard.createCursorKeys();
-        testAttackButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-        testAttackButton2 = this.input.keyboard.addKey(Phaser.KeyCode.BACKSPACE);
-        testAttackButton3 = this.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 
         //floor
         background = game.add.sprite(0, 0, 'background');
@@ -59,8 +55,8 @@ demo.bossLevel.prototype=
         bossman.animations.add('idle', [0, 0, 1, 1], true);
         bossman.animations.play('idle', 8, true);
         
-        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinehorizontal(player), this);
-        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinevertical(player), this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinehorizontal, this, player);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinevertical, this, player);
         game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), suitAttack, this);
         
         //player
@@ -107,16 +103,6 @@ demo.bossLevel.prototype=
         else{
             playerx = 500;
             playery = 400;
-        }
-        
-        if(testAttackButton.isDown){
-            suitAttack();
-        }
-        if(testAttackButton2.isDown){
-            predeadlinehorizontal(player);
-        }
-        if(testAttackButton3.isDown){
-            predeadlinevertical(player);
         }
     }
 };
