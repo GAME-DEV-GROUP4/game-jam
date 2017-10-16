@@ -6,15 +6,17 @@ var player;
 var bossman;
 var bossActing;
 var suits;
+var lasers;
 var playerx, playery;
 var bossx=650;
 var bossy=50;
 var hitTime;
 var cursors;
-var testAttackButton;
-var testAttackButton2;
-var testAttackButton3;
+var testAttackButton, testAttackButton2, testAttackButton3;
 var attackSprites;
+var hpText;
+var hp = 500;
+var invincible = false;
 
 
 demo.bossLevel.prototype=
@@ -43,7 +45,7 @@ demo.bossLevel.prototype=
 
         //floor
         background = game.add.sprite(0, 0, 'background');
-        floor = game.add.sprite(0, 580, 'floor');
+        floor = game.add.sprite(200, 580, 'floor');
         game.physics.arcade.enable(floor);
         floor.body.immovable = true;
         
@@ -58,8 +60,8 @@ demo.bossLevel.prototype=
         bossman.animations.play('idle', 8, true);
         
         //player
-        player = game.add.sprite(100, 500, 'dude');
-        player.scale.setTo(1.5, 1.5);
+        player = game.add.sprite(200, 450, 'dude');
+//        player.scale.setTo(1.5, 1.5);
         game.physics.enable(player);
         player.body.gravity.y = 500;
         player.body.collideWorldBounds = true;
@@ -71,25 +73,36 @@ demo.bossLevel.prototype=
         suits = game.add.group();
         game.physics.arcade.enable(suits);
         attackSprites = game.add.group();
+        
+        //lasers
+        lasers = game.add.group();
+        game.physics.arcade.enable(lasers);
+        
+        //make hp text
+        hpText = game.add.text(16, 16, 'HP: 500', { fontFamily:'Courier', fontSize:'32px', fill:'#000'});
+        hpText.fixedToCamera = true;
+        hpText.cameraOffset.setTo(16, 16);
 
         
     },
     
     update: function(){
-        playerMove();
         
         //handle collisions
         var hitBullet = game.physics.arcade.overlap(player, suits, hitSuit, null, this);
+        var hitLaser = game.physics.arcade.overlap(player, lasers, hitLaser, null, this);
         var bossOverlapX = game.physics.arcade.Overlap
         game.physics.arcade.collide(player, floor);
         
+        playerMove();
+        
         if(this.game.time.totalElapsedSeconds()-hitTime <1){
-            playerx = 50;
-            playery = 175;
+            playerx = 200;
+            playery = 400;
         }
         else{
-            playerx = 300;
-            playery = 350;
+            playerx = 500;
+            playery = 400;
         }
         
         if(testAttackButton.isDown){
@@ -113,7 +126,8 @@ function predeadlinehorizontal(player){
 }
     
 function deadlinehorizontal(player, ypos){
-    var deadline = attackSprites.create(200, ypos, 'deadline');
+    var deadline = lasers.create(200, ypos, 'deadline');
+    game.physics.enable(deadline);
     deadline.width = 800;
     game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
 }
@@ -128,7 +142,8 @@ function predeadlinevertical(player){
 }
     
 function deadlinevertical(player, xpos){
-    var deadline = attackSprites.create(xpos, 0, 'deadline');
+    var deadline = lasers.create(xpos, 0, 'deadline');
+    game.physics.enable(deadline)
     deadline.width = 600;
     deadline.angle = 90;
     game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
@@ -137,24 +152,52 @@ function deadlinevertical(player, xpos){
 function suitAttack(){
     var suit = suits.create(bossman.x, bossman.y, 'fireball');
     game.physics.enable(suit);
-    game.physics.arcade.moveToObject(suit, player);
+    game.physics.arcade.moveToObject(suit, player, 300);
 
 }
+
 function hitSuit(player, suit)
 {
     suit.kill();
     hitTime = this.game.time.totalElapsedSeconds();
+    if (!invincible)
+        {
+            hp -= 50;
+            hpText.text = 'HP: ' + hp;
+            invincibility();
+        }
+}
+
+function hitLaser(player, laser)
+{
+    if (!invincible)
+        {
+            hp = -100;
+            hpText.text = 'HP: ' + hp;
+            invincibility();
+        }
+}
+
+function invincibility()
+{
+    toggleInvincible();
+    game.time.events.add(2000, toggleInvincible, this);
+    var dmgTween = game.add.tween(player).from( { alpha: 0 }, 200, "Linear", true, 0, 5, true);
+}
+
+function toggleInvincible()
+{
+    invincible = !invincible;
 }
 
 function playerMove()
 {
     //set player movement
     player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
-
+    
     if (cursors.left.isDown)
     {
-        player.body.velocity.x = 0 - playerx;
+        player.body.velocity.x = 0-playerx;
         player.animations.play('left');
     }
     else if (cursors.right.isDown)
@@ -162,14 +205,14 @@ function playerMove()
         player.body.velocity.x = playerx;
         player.animations.play('right');
     }
-    else if (cursors.up.isDown)
-    {
-        player.body.velocity.y = 0 - playery;
-    }
     else 
     {
         player.animations.stop();
         player.frame = 4;
+    }
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.body.velocity.y = 0-playery;
     }
         
         
