@@ -55,9 +55,9 @@ demo.bossLevel.prototype=
         bossman.animations.add('idle', [0, 0, 1, 1], true);
         bossman.animations.play('idle', 8, true);
         
-        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinehorizontal, this, player);
-        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinevertical, this, player);
-        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), suitAttack, this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinehorizontal, this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(2.5, 5), predeadlinevertical, this);
+        game.time.events.loop(Phaser.Timer.SECOND * game.rnd.realInRange(0.5, 1.5), suitAttack, this);
         
         //player
         player = game.add.sprite(200, 450, 'dude');
@@ -76,7 +76,7 @@ demo.bossLevel.prototype=
         
         //lasers
         lasers = game.add.group();
-        game.physics.arcade.enable(lasers);
+        lasers.enableBody = true;
         
         //make hp text
         hpText = game.add.text(16, 16, 'HP: 500', { fontFamily:'Courier', fontSize:'32px', fill:'#000'});
@@ -90,9 +90,8 @@ demo.bossLevel.prototype=
         
         //handle collisions
         var hitBullet = game.physics.arcade.overlap(player, suits, hitSuit, null, this);
-        var hitLaser = game.physics.arcade.overlap(player, lasers, hitLaser, null, this);
-        var bossOverlapX = game.physics.arcade.Overlap
-        game.physics.arcade.collide(player, floor);
+        var hitLasers = game.physics.arcade.overlap(player, lasers, hitLaser, null, this);
+        var hitfloor = game.physics.arcade.collide(player, floor);
         
         playerMove();
         
@@ -104,41 +103,52 @@ demo.bossLevel.prototype=
             playerx = 500;
             playery = 400;
         }
+        
+        if (hp <= 0)
+            {
+                game.state.start('end')
+            }
     }
 };
 
-function predeadlinehorizontal(player){
+function predeadlinehorizontal(){
     var ypos = player.y + 24;
     var predeadline = attackSprites.create(200, ypos, 'warningdeadline');
     predeadline.width = 800;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    game.time.events.add(1000, deadlinehorizontal, this, player, ypos);
+    game.time.events.add(1000, deadlinehorizontal, this, ypos);
 }
     
-function deadlinehorizontal(player, ypos){
+function deadlinehorizontal(ypos){
     var deadline = lasers.create(200, ypos, 'deadline');
-    game.physics.enable(deadline);
     deadline.width = 800;
+    game.physics.enable(deadline);
     game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    game.time.events.add(1000, killDeadline, this, deadline);
 }
 
-function predeadlinevertical(player){
+function predeadlinevertical(){
     var xpos = player.x + 16;
     var predeadline = attackSprites.create(xpos, 0, 'warningdeadline');
     predeadline.width = 600;
     predeadline.angle = 90;
     game.add.tween(predeadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
-    game.time.events.add(1000, deadlinevertical, this, player, xpos);
+    game.time.events.add(1000, deadlinevertical, this, xpos);
 }
     
-function deadlinevertical(player, xpos){
+function deadlinevertical(xpos){
     var deadline = lasers.create(xpos, 0, 'deadline');
-    game.physics.enable(deadline)
     deadline.width = 600;
     deadline.angle = 90;
+    game.physics.enable(deadline);
     game.add.tween(deadline).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+    game.time.events.add(1000, killDeadline, this, deadline);
+
 }
 
+function killDeadline(deadline){
+    lasers.remove(deadline, true);
+}
 function suitAttack(){
     var suit = suits.create(bossman.x, bossman.y, 'fireball');
     game.physics.enable(suit);
@@ -162,7 +172,7 @@ function hitLaser(player, laser)
 {
     if (!invincible)
         {
-            hp = -100;
+            hp -= 100;
             hpText.text = 'HP: ' + hp;
             invincibility();
         }
@@ -171,8 +181,8 @@ function hitLaser(player, laser)
 function invincibility()
 {
     toggleInvincible();
-    game.time.events.add(2000, toggleInvincible, this);
-    var dmgTween = game.add.tween(player).from( { alpha: 0 }, 200, "Linear", true, 0, 5, true);
+    game.time.events.add(1000, toggleInvincible, this);
+    var dmgTween = game.add.tween(player).to( { alpha: 0 }, 100, "Linear", true, 0, 5, true);
 }
 
 function toggleInvincible()
