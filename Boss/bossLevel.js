@@ -84,12 +84,12 @@ demo.bossLevel.prototype=
         game.physics.arcade.collide(player, floor);
         
         if(this.game.time.totalElapsedSeconds()-hitTime <1){
-            playerx = 150;
+            playerx = 50;
             playery = 175;
         }
         else{
-            playerx = 150;
-            playery=350;
+            playerx = 300;
+            playery = 350;
         }
         
         if(testAttackButton.isDown){
@@ -154,7 +154,7 @@ function playerMove()
 
     if (cursors.left.isDown)
     {
-        player.body.velocity.x = 0-playerx;
+        player.body.velocity.x = 0 - playerx;
         player.animations.play('left');
     }
     else if (cursors.right.isDown)
@@ -164,7 +164,7 @@ function playerMove()
     }
     else if (cursors.up.isDown)
     {
-        player.body.velocity.y = 0-playery;
+        player.body.velocity.y = 0 - playery;
     }
     else 
     {
