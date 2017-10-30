@@ -1,4 +1,3 @@
-var test = {};
 var centerX = 400, centerY = 300;
 var player;
 var cursors;
@@ -17,7 +16,7 @@ test.lvl2.prototype =
     preload: function()
     {
         game.load.image('sketch', 'assets/level-plan-sketch.jpg');
-        game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.spritesheet('dude', 'assets/dude.png', 28, 48);
         game.load.image('platform', 'assets/platform.png');
         game.load.image('stench', 'assets/badland.png');
         game.load.image('mover', 'assets/mover.png');
@@ -234,10 +233,10 @@ test.lvl2.prototype =
         friends.enableBody = true;
         
         //make friend objects
-        var friend = friends.create(130, game.world.height/2 - 70, 'friend');
-        var friend = friends.create(638, 312, 'friend');
-        var friend = friends.create(1410, game.world.height/2 - (64+56), 'friend');
-        var friend = friends.create(2000, 890, 'friend');
+        var friend = friends.create(130, game.world.height/2 - 82, 'friend');
+        var friend = friends.create(638, 300, 'friend');
+        var friend = friends.create(1410, game.world.height/2 - (64+68), 'friend');
+        var friend = friends.create(2000, 878, 'friend');
         
         //make quest objects
         headbands = game.add.group();
@@ -257,8 +256,8 @@ test.lvl2.prototype =
         game.camera.follow(player);
         game.camera.deadzone = new Phaser.Rectangle(200, 150, 400, 300);
         //player walking animations
-        player.animations.add('left', [0, 1, 2, 3], 10, true);
-        player.animations.add('right', [5, 6, 7, 8], 10, true);
+        player.animations.add('left', [0, 1, 0, 1], 5, true);
+        player.animations.add('right', [2, 3, 2, 3], 5, true);
         
         //make hp text
         hpText = game.add.text(16, 16, 'HP: 300', { fontFamily:'Courier', fontSize:'32px', fill:'#000'});
@@ -311,7 +310,7 @@ test.lvl2.prototype =
         else 
         {
             player.animations.stop();
-            player.frame = 4;
+            player.frame = 2;
         }
         if (cursors.up.isDown && player.body.touching.down)
         {
@@ -321,7 +320,7 @@ test.lvl2.prototype =
         if (hp<=0)
         {
             //go to game over/menu state
-            player.kill()
+            game.state.start('gameOver');
         }
         
         //if (reach door, hGet & dGet both true)
