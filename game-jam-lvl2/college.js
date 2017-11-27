@@ -9,6 +9,7 @@ var beers;
 var bullies;
 var hp = 300, hpText;
 var hGet = false, dGet = false;
+var enterTime;
 var drunkTime;
 
 test.college = function(){};
@@ -33,6 +34,7 @@ test.college.prototype =
         game.stage.backgroundColor='#ccc';
         game.world.setBounds(0, 0, 2400, 1200);
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
         
         //var sketch = game.add.sprite(0, 0, 'sketch');
         
@@ -40,204 +42,102 @@ test.college.prototype =
         obstacles = game.add.group();
         obstacles.enableBody = true;
         
-        //make obstacle ground
-        var stench = obstacles.create(1400, 1200-(32*4), 'stench');
-            stench.scale.setTo(2.5, 4);
-            stench.body.immovable = true;
-        
         //make platforms group that will include stairs and floor
         platforms = game.add.group();
         platforms.enableBody = true;
         
+        var platform = platforms.create(0,1200-(32*2), 'platform');
+        platform.scale.setTo(1,2);
+        platform.body.immovable=true;
+        
         //bounds group
         bounds = game.add.group();
-        bounds.enableBody = true;
+        bounds.enableBody= true;
+        
+        var bound = bounds.create(750,1200-(32*3),'bound');
+            bound.scale.setTo(2,3);
+            bound.body.immovable = true;
+        var bound = bounds.create(1500+32, 1200-(32*3), 'bound');
+            bound.scale.setTo(0.5,2);
+            bound.body.immovable=true;
         
         //door group
         doors = game.add.group();
         doors.enableBody = true;
         
+        var door = doors.create(50, 1200-(32*4), 'door');
+        
         //beer group
         beers = game.add.group();
         beers.enableBody = true;
         
-        var beer = beers.create(70, 126, 'beer');
+        var beer = beers.create(50+(32*3), 1200-(32*3), 'beer');
+        var beer = beers.create(600+32, 1200-(32*8), 'beer');
+        var beer = beers.create(1600 +32, 1200-(32*15), 'beer');
+        var beer = beers.create(2000, 1200-(32*11),'beer');
+        var beer = beers.create(2200+32, 1200-(32*9), 'beer');
+        
         //make ledges& bounds
-        var ledge = platforms.create(70, 160, 'platform');
+        var ledge = platforms.create(450, 1200 -(32*6), 'platform');
             ledge.scale.setTo(0.25, 1);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(600, 1200-(32*7), 'platform');
+            ledge.scale.setTo(0.25, 1);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(900, 1200-(32*10),'platform');
+            ledge.scale.setTo(1, 0.5);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(750, 1200-(32*2), 'platform');
+            ledge.scale.setTo(2,4);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(1400, 1200-(32*14), 'platform');
+            ledge.scale.setTo(0.75, 0.75);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(1700,1200-(32*10), 'platform');
+            ledge.scale.setTo(1, 0.25);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(1800, 1200-(32*5), 'platform');
+            ledge.scale.setTo(0.5, 0.25);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(2200, 1200-(32*8), 'platform');
+            ledge.scale.setTo(0.25,0.25);
+            ledge.body.immovable = true;
+        var ledge = platforms.create(2200, 1200-(32*2), 'platform');
+            ledge.scale.setTo(0.5, 3);
             ledge.body.immovable = true;
         var door = doors.create(104, 96, 'door');
-            door.body.immovable = true;
-        var ledge = platforms.create(300, 250, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(550 , 350, 'platform');
-            ledge.scale.setTo(0.5, 1);
-            ledge.body.immovable = true;
-        var bound = bounds.create(540, 286, 'bound');
-            bound.body.immovable = true;
-        var bound = bounds.create(750, 286, 'bound');
-            bound.body.immovable = true;
-        var ledge = platforms.create(0, game.world.height/2 - 32, 'platform');
-            ledge.scale.setTo(4.5, 2);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(2120, 150, 'platform');
-            ledge.scale.setTo(0.5, 1);
-            ledge.body.immovable = true;
-        var bound = bounds.create(2110, 118-32, 'bound');
-            bound.body.immovable = true;
-        var bound = bounds.create(2320, 118-32, 'bound');
-            bound.body.immovable = true;
-        var ledge = platforms.create(1920, 260, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(2120, 390, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(1920, 550, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(2120, 700, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(1920, 930, 'platform');
-            ledge.scale.setTo(0.5, 1);
-            ledge.body.immovable = true;
-        var bound = bounds.create(1910, 930-64, 'bound');
-            bound.body.immovable = true;
-        var bound = bounds.create(2120, 930-64, 'bound');
-            bound.body.immovable = true;
-        var ledge = platforms.create(1680, 820, 'platform');
-            ledge.scale.setTo(0.5, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(1560, 930, 'platform');
-            ledge.scale.setTo(0.25, 1);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(0, 1200-(32*6), 'platform');
-            ledge.scale.setTo(1, 6);
-            ledge.body.immovable = true;
-        var door = doors.create(104, 1200-(32*8), 'door');
-            door.body.immovable = true;
-        var ledge = platforms.create(400, 1200-(32*2), 'platform');
-            ledge.scale.setTo(2, 2);
-            ledge.body.immovable = true;
-        var ledge = platforms.create(1200, 1200-(32*6), 'platform');
-            ledge.scale.setTo(0.75, 6);
-            ledge.body.immovable = true;
+        var door = doors.create(2400-32, 1200-(32*4), 'door');
+
         
-        //make stairs & bounds
-        var stair = platforms.create(800, game.world.height/2 - (32+50), 'platform');
-            stair.scale.setTo(2.5, 2);
-            stair.body.immovable = true;
-        var stair = platforms.create(850, game.world.height/2 - (32+100), 'platform');
-            stair.scale.setTo(1.25, 2);
-            stair.body.immovable = true;
-        var stair = platforms.create(900, game.world.height/2 - (32+150), 'platform');
-            stair.scale.setTo(1.125, 2);
-            stair.body.immovable = true;
-        var stair = platforms.create(950, game.world.height/2 - (32+200), 'platform');
-            stair.scale.setTo(1, 2);
-            stair.body.immovable = true;
-        var bound = bounds.create(940, game.world.height/2-(64+200), 'bound');
-            bound.body.immovable = true;
-        var bound = bounds.create(1350, game.world.height/2-(64+200), 'bound');
-            bound.body.immovable = true;
-        var stair = platforms.create(1500, game.world.height/2 - (32+200), 'platform');
-            stair.scale.setTo(0.75, 7);
-            stair.body.immovable = true;
-        var bound = platforms.create(1490, game.world.height/2-(64+200), 'bound');
-            bound.body.immovable = true;
-        var bound = bounds.create(1800, game.world.height/2-(64+200), 'bound');
-            bound.body.immovable = true;
+        friends = game.add.group();
+        friends.enableBody = true;
         
-        //make movable objects group
-        movers = game.add.group();
-        movers.enableBody = true;
+        var friend = friends.create(1900, 1200-(32*7)+(32*.5), 'friend');
+            friend.body.immovable = true;
+            
         
-        //make mover
-        var mover = movers.create(1700, 748, 'mover');
-            mover.scale.setTo(3, 1);
-            mover.body.collideWorldBounds = true;
-            mover.body.gravity.y = 600;
-            mover.body.drag = 1000;
         
         //make bullies group
         bullies = game.add.group();
         bullies.enableBody = true;
         
         //make bully objects
-        var bully = bullies.create(200, 505, 'bully');
+        var bully = bullies.create(1000, 1200-(32*4), 'bully');
             bully.body.collideWorldBounds = true;
             bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
+            bully.body.velocity.x = -150;
             bully.body.bounce.x = 1;
-        var bully = bullies.create(300, 505, 'bully');
+        var bully = bullies.create(1200, 1200-(32*4), 'bully');
             bully.body.collideWorldBounds = true;
             bully.scale.setTo(2, 2);
-            bully.body.velocity.x = -200;
+            bully.body.velocity.x = 150;
             bully.body.bounce.x = 1;
-        var bully = bullies.create(1030, 302, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(1100, 302, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = -200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(600, 286, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(1510, 302, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(1790, 302, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = -200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(2130, 118-32, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(2020, 930-64, 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(410, 1200-(32*4), 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(1100, 1200-(32*4), 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = -200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(600, 1200-(32*4), 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = -200;
-            bully.body.bounce.x = 1;
-        var bully = bullies.create(800, 1200-(32*4), 'bully');
-            bully.body.collideWorldBounds = true;
-            bully.scale.setTo(2, 2);
-            bully.body.velocity.x = 200;
-            bully.body.bounce.x = 1;
-        
         
         //make the player
-        player = game.add.sprite(104, 96, 'dude');
+        player = game.add.sprite(104, 1200-(32*5), 'dude');
         //player physics
         game.physics.arcade.enable(player);
-        player.body.gravity.y = 500;
+        player.body.gravity.y = 2000;
         player.body.collideWorldBounds = true;
         //game camera settings
         game.camera.follow(player);
@@ -247,46 +147,37 @@ test.college.prototype =
         player.animations.add('right', [2, 3, 2, 3], 5, true);
         
         //make hp text
-        hpText = game.add.text(16, 16, 'HP: 300', { fontFamily:'Courier', fontSize:'32px', fill:'#000'});
+        hpText = game.add.text(16, 16, 'HP: ' +game.global.hp, { fontFamily:'Courier', fontSize:'32px', fill:'#000'});
         hpText.fixedToCamera = true;
         hpText.cameraOffset.setTo(16, 16);
         
         //controls
         cursors = game.input.keyboard.createCursorKeys();
+        
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
+        
+        game.time.events.loop(Phaser.Timer.SECOND, healthLoss, this);
     },
     update: function()
     {
         //collide everything with platforms, obstacles, movers
         var hitPlatform = game.physics.arcade.collide(player, platforms);
         var hitObstacle = game.physics.arcade.collide(player, obstacles);
-        var hitBully = game.physics.arcade.collide(player, bullies);
-        var hitDoor = game.physics.arcade.collide(player, doors);
+        var hitBad = game.physics.arcade.collide(player, bullies, touchBully, null, this);
         var hitBullet = game.physics.arcade.overlap(player, beers, touchBeer, null, this);
+        var hitFriend = game.physics.arcade.overlap(player, friends, touchFriend, null, this);
         game.physics.arcade.collide(bullies, bounds);
         game.physics.arcade.collide(bullies, platforms);
-        game.physics.arcade.collide(player, movers);
-        game.physics.arcade.collide(movers, platforms);
-        game.physics.arcade.collide(movers, obstacles);
+        var touchDoor = game.physics.arcade.overlap(player,doors);
         
         //collect things if u touch them
-        
-        if(hitDoor&& player.y >200){
+        if(touchDoor&& player.x >2000){
             game.state.start('boss');
-        }
-        
-        //bullies and obstacles hurt u if u touch them
-        if (hitBully)
-        {
-            touchBully(player, bullies);
-        }
-        if (hitObstacle)
-        {
-            touchBully(player, obstacles);
         }
         //set player movement
         player.body.velocity.x = 0;
         var direction = 1;
-        if(this.game.time.totalElapsedSeconds() - 10 < drunkTime){
+        if(this.game.time.totalElapsedSeconds() - 2 < drunkTime){
                 direction = -1;
             }
         if (cursors.left.isDown)
@@ -306,12 +197,18 @@ test.college.prototype =
         }
         if (cursors.up.isDown && player.body.touching.down)
         {
-            player.body.velocity.y = -450;
+            player.body.velocity.y = -800;
         }
-        
+        if(cursors.down.isDown && !player.body.touching.down){
+            player.body.velocity.y += 50;
+        }
         if (hp<=0)
         {
             //go to game over/menu state
+            game.state.start('gameOver');
+        }
+        if(player.y > 1200-50)
+        {
             game.state.start('gameOver');
         }
         
@@ -320,13 +217,25 @@ test.college.prototype =
     }
 };
     
-function touchBully (player, baddie)
+function touchBully(player, bully)
 {
-    hp -= 10;
-    hpText.text = 'HP: ' + hp;
+    game.global.hp -= 50;
+    hpText.text = 'HP: ' + game.global.hp;
+    bully.kill();
 }
 
 function touchBeer (player, beer){
     beer.kill();
     drunkTime = this.game.time.totalElapsedSeconds();
+}
+
+function touchFriend(player, friend)
+{
+    game.global.hp += 50;
+    hpText.text = 'HP: ' + game.global.hp;
+    friend.kill();
+}
+function healthLoss(){
+    game.global.hp -= 10;
+    hpText.text = "HP: " + game.global.hp;
 }
